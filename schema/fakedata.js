@@ -1,3 +1,6 @@
+// Fake data for users and movies
+
+// User data
 const UserList = [
     {
         id: 1, name: "Vivek Sawant", username: "vic-sec", age: 36, nationality: "INDIA", friends: [
@@ -16,6 +19,7 @@ const UserList = [
     { id: 10, name: "Daniel García", username: "dan_garcia", age: 40, nationality: "SPAIN" }
 ]
 
+// Movie data
 const MovieList = [
     {
         id: 1,
@@ -49,4 +53,5 @@ const MovieList = [
     }
 ];
 
+// export the fake data
 module.exports = { UserList, MovieList }

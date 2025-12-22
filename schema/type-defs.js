@@ -41,4 +41,6 @@ const typeDefs = `
     }
 
 `
+
+// export the type definitions
 module.exports = typeDefs
