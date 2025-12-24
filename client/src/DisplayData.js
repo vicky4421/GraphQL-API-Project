@@ -1,6 +1,6 @@
 // import necessary libraries and hooks
 import React, { useState } from 'react'
-import { useQuery, useLazyQuery } from '@apollo/client/react'
+import { useQuery, useLazyQuery, useMutation } from '@apollo/client/react'
 import { gql } from '@apollo/client'
 
 // GraphQL queries
@@ -35,16 +35,35 @@ const QUERY_MOVIE_BY_NAME = gql`
         }
     }
 `
+// Mutation to create a new user
+const CREATE_USER_MUTATION = gql`
+    mutation CreateUser($input: CreateUserInput!) {
+        createUser(input: $input) {
+            id
+            name
+            username
+            age
+            nationality
+        }
+    }
+`
+
 // DisplayData component
 function DisplayData() {
 
     // state to hold the movie name input
     const [movieName, setMovieName] = useState("")
 
+    const [name, setName] = useState("")
+    const [age, setAge] = useState(0)
+    const [username, setUsername] = useState("")
+    const [nationality, setNationality] = useState("")
+
     // execute the queries
-    const { loading, error, data } = useQuery(QUERY_ALL_USERS)
+    const { loading, error, data, refetch } = useQuery(QUERY_ALL_USERS)
     const { loading: moviesLoading, error: moviesError, data: moviesData } = useQuery(QUERY_ALL_MOVIES)
     const [fetchMovie, { data: movieData, loading: movieLoading, error: movieError }] = useLazyQuery(QUERY_MOVIE_BY_NAME)
+    const [createUser] = useMutation(CREATE_USER_MUTATION)
 
     // handle loading and error states
     if (loading) return <h1>Loading...</h1>
@@ -56,6 +75,18 @@ function DisplayData() {
     // render the data
     return (
         <div>
+            <div>
+                {/* input fields to create a new user */}
+                <input type='text' placeholder='Enter Name' value={name} onChange={(e) => setName(e.target.value)} />
+                <input type='number' placeholder='Enter Age' value={age} onChange={(e) => setAge(e.target.value)} />
+                <input type='text' placeholder='Enter Username' value={username} onChange={(e) => setUsername(e.target.value)} />
+                <input type='text' placeholder='Enter Nationality' value={nationality} onChange={(e) => setNationality(e.target.value.toUpperCase())} />
+                <button onClick={() => {
+                    createUser({ variables: { input: { name, age: Number(age), username, nationality } } })
+                    refetch()
+                }}>Add User</button>
+            </div>
+
             <h1>List of Users</h1>
 
             {/* display users */}
